@@ -1,0 +1,632 @@
+<!--
+===========================================================
+★ カスタマイズはここだけ！★
+
+【申し込みボタンのリンクを変える方法】
+
+下の SESSION_URL の ' ' の中を、あなたの公式LINEのURLに書き換えてください。
+
+例）
+const SESSION_URL = 'https://lin.ee/あなたのURL';
+
+変更箇所は、このファイルを下にスクロールして
+「const SESSION_URL =」と書いてある行です。
+
+書き換えたら保存して、GitHubにアップすれば完了です！
+===========================================================
+-->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>理想の未来から逆算するマネーナビ診断</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --blue:   #1a6bbd;
+    --blue2:  #4a9bd4;
+    --gold:   #c9956c;
+    --gold2:  #e8c49a;
+    --dark:   #1a2a4e;
+    --mid:    #3a5080;
+    --soft:   #7a9abf;
+    --bg:     #f4f7fb;
+    --bg2:    #eaf0f7;
+    --white:  #ffffff;
+    --border: #b8cce0;
+  }
+
+  body {
+    font-family: 'Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴシック ProN', sans-serif;
+    background: var(--bg);
+    color: var(--dark);
+    min-height: 100vh;
+  }
+
+  /* ===== TOP ===== */
+  .top-page {
+    min-height: 100vh;
+    background: linear-gradient(160deg, #e8f0f8 0%, #f4f7fb 40%, #fdf8f0 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+  }
+  .top-badge {
+    background: linear-gradient(135deg, var(--blue), var(--blue2));
+    color: #fff;
+    font-size: 13px;
+    letter-spacing: 3px;
+    padding: 6px 20px;
+    border-radius: 50px;
+    margin-bottom: 20px;
+    display: inline-block;
+  }
+  .top-title {
+    font-size: 32px;
+    font-weight: bold;
+    color: var(--dark);
+    line-height: 1.5;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+  }
+  .top-title span { color: var(--blue); }
+  .top-sub { font-size: 15px; color: var(--mid); letter-spacing: 2px; margin-bottom: 30px; }
+  .top-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 28px;
+    max-width: 420px;
+    width: 100%;
+    margin-bottom: 30px;
+    text-align: left;
+  }
+  .top-card p { font-size: 16px; color: var(--mid); line-height: 2.0; }
+  .top-info {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+  .top-info-item {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    padding: 6px 18px;
+    font-size: 14px;
+    color: var(--blue);
+    font-weight: bold;
+  }
+  .start-btn {
+    background: linear-gradient(135deg, var(--blue), var(--blue2));
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 18px 60px;
+    font-size: 19px;
+    font-family: inherit;
+    font-weight: bold;
+    letter-spacing: 3px;
+    cursor: pointer;
+    box-shadow: 0 6px 24px rgba(26,107,189,0.4);
+    transition: transform 0.2s;
+  }
+  .start-btn:hover { transform: translateY(-2px); }
+
+  /* ===== QUIZ ===== */
+  .quiz-page {
+    display: none;
+    min-height: 100vh;
+    background: linear-gradient(160deg, #e8f0f8 0%, #f4f7fb 100%);
+    padding: 20px 16px 40px;
+  }
+  .quiz-header { max-width: 560px; margin: 0 auto 20px; }
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--soft);
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+  }
+  .progress-bar-bg { height: 6px; background: var(--border); border-radius: 50px; overflow: hidden; }
+  .progress-bar-fill {
+    height: 6px;
+    background: linear-gradient(90deg, var(--blue), var(--blue2), var(--gold));
+    border-radius: 50px;
+    transition: width 0.4s ease;
+  }
+  .quiz-card {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 30px 24px;
+    max-width: 560px;
+    margin: 0 auto;
+    box-shadow: 0 4px 30px rgba(26,107,189,0.12);
+  }
+  .q-num { font-size: 13px; color: var(--blue); letter-spacing: 3px; margin-bottom: 12px; font-weight: bold; }
+  .q-text { font-size: 20px; font-weight: bold; color: var(--dark); line-height: 1.7; margin-bottom: 24px; letter-spacing: 1px; }
+  .choices { display: flex; flex-direction: column; gap: 12px; }
+  .choice-btn {
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    font-size: 16px;
+    font-family: inherit;
+    color: var(--dark);
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+    line-height: 1.6;
+    letter-spacing: 0.5px;
+  }
+  .choice-btn:hover { border-color: var(--blue); background: #e8f0f8; transform: translateX(4px); }
+  .choice-btn.selected { border-color: var(--blue); background: linear-gradient(135deg, #e8f0f8, #eaf4f8); color: var(--blue); font-weight: bold; }
+  .choice-label { font-size: 13px; color: var(--blue2); font-weight: bold; margin-right: 8px; }
+
+  /* ===== RESULT ===== */
+  .result-page {
+    display: none;
+    min-height: 100vh;
+    background: linear-gradient(160deg, #e8f0f8 0%, #f4f7fb 40%, #fdf8f0 100%);
+    padding: 30px 16px 60px;
+  }
+  .result-wrap { max-width: 560px; margin: 0 auto; }
+  .result-header { text-align: center; margin-bottom: 24px; }
+  .result-deco { font-size: 13px; color: var(--blue); letter-spacing: 4px; margin-bottom: 8px; }
+  .result-header h2 { font-size: 17px; color: var(--mid); letter-spacing: 2px; margin-bottom: 6px; font-weight: normal; }
+
+  .type-card {
+    background: linear-gradient(135deg, var(--blue), var(--blue2));
+    border-radius: 20px;
+    padding: 28px 24px;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #fff;
+  }
+  .type-label { font-size: 14px; letter-spacing: 3px; opacity: 0.85; margin-bottom: 10px; }
+  .type-name { font-size: 30px; font-weight: bold; letter-spacing: 3px; margin-bottom: 8px; }
+  .type-sub { font-size: 15px; opacity: 0.85; letter-spacing: 1px; }
+
+  .result-block {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--blue);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+  }
+  .result-block.gold { border-left-color: var(--gold); }
+  .rb-label { font-size: 12px; color: var(--blue); letter-spacing: 2px; font-weight: bold; margin-bottom: 8px; }
+  .result-block.gold .rb-label { color: var(--gold); }
+  .rb-body { font-size: 16px; line-height: 2.0; color: var(--dark); white-space: pre-line; }
+
+  .point-list { list-style: none; padding: 0; }
+  .point-list li {
+    font-size: 16px;
+    color: var(--dark);
+    line-height: 1.8;
+    padding: 5px 0;
+    border-bottom: 1px dashed var(--border);
+    display: flex;
+    gap: 8px;
+  }
+  .point-list li:last-child { border-bottom: none; }
+  .point-list li::before { content: '▸'; color: var(--blue); flex-shrink: 0; }
+
+  /* あなたへのメッセージ */
+  .message-block {
+    background: linear-gradient(135deg, #f4f7fb, #fff8f4);
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 22px;
+    margin: 24px 0;
+  }
+  .message-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--blue);
+    letter-spacing: 2px;
+    text-align: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .message-body {
+    font-size: 16px;
+    line-height: 2.2;
+    color: var(--dark);
+    margin-bottom: 16px;
+  }
+  .check-list { list-style: none; padding: 0; margin: 12px 0; }
+  .check-list li {
+    font-size: 16px;
+    color: var(--dark);
+    line-height: 1.9;
+    padding: 4px 0;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .check-list li::before { content: '✔'; color: var(--blue); flex-shrink: 0; font-weight: bold; }
+  .urgent-badge {
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    color: var(--dark);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: center;
+    margin: 14px 0;
+    letter-spacing: 1px;
+  }
+
+  /* CTA */
+  @keyframes shimmer-ltr {
+    0%   { left: -60%; }
+    100% { left: 150%; }
+  }
+  .cta-btn {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    color: var(--dark);
+    border: none;
+    border-radius: 50px;
+    padding: 20px 40px;
+    font-size: 18px;
+    font-family: inherit;
+    font-weight: bold;
+    letter-spacing: 2px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(201,149,108,0.5);
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    transition: transform 0.2s;
+  }
+  .cta-btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -60%;
+    width: 40%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+    animation: shimmer-ltr 3s ease-in-out infinite;
+    border-radius: 50px;
+  }
+  .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(201,149,108,0.7); }
+  .cta-note { font-size: 13px; color: var(--soft); text-align: center; margin-top: 6px; }
+
+  .retry-btn {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: var(--soft);
+    font-size: 13px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    background: none;
+    border: none;
+    font-family: inherit;
+    text-decoration: underline;
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== TOP ===== -->
+<div class="top-page" id="topPage">
+  <div class="top-badge">✦ 無料診断 ✦</div>
+  <div class="top-title">理想の未来から<br><span>逆算する</span><br>マネーナビ診断</div>
+  <div class="top-sub">あなたのお金タイプを診断します</div>
+  <div class="top-card">
+    <p>「老後のお金、大丈夫かな…」<br>「何から始めればいいのかわからない」<br>「もっと自由な生き方がしたい」<br><br>15問に答えるだけで、あなたの<strong>お金タイプ</strong>と<br><strong>今必要なアクション</strong>がわかります。</p>
+  </div>
+  <div class="top-info">
+    <div class="top-info-item">📝 15問</div>
+    <div class="top-info-item">⏱ 約3分</div>
+    <div class="top-info-item">🔍 8タイプ</div>
+  </div>
+  <button class="start-btn" onclick="startQuiz()">診断スタート ▶</button>
+</div>
+
+<!-- ===== QUIZ ===== -->
+<div class="quiz-page" id="quizPage">
+  <div class="quiz-header">
+    <div class="progress-info">
+      <span id="progressText">Q1 / 16</span>
+      <span id="progressPct">0%</span>
+    </div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressBar" style="width:0%"></div>
+    </div>
+  </div>
+  <div class="quiz-card">
+    <div class="q-num" id="qNum">Q01</div>
+    <div class="q-text" id="qText"></div>
+    <div class="choices" id="choices"></div>
+  </div>
+</div>
+
+<!-- ===== RESULT ===== -->
+<div class="result-page" id="resultPage">
+  <div class="result-wrap">
+    <div class="result-header">
+      <div class="result-deco">✦ 診断結果 ✦</div>
+      <h2>あなたのマネータイプは…</h2>
+    </div>
+    <div class="type-card">
+      <div class="type-label">YOUR TYPE</div>
+      <div class="type-name" id="r-typeName"></div>
+      <div class="type-sub" id="r-typeSub"></div>
+    </div>
+    <div class="result-block">
+      <div class="rb-label">TODAY'S MESSAGE</div>
+      <div class="rb-body" id="r-desc"></div>
+    </div>
+    <div class="result-block">
+      <div class="rb-label">YOUR STRENGTH ／ 強み</div>
+      <ul class="point-list" id="r-strength"></ul>
+    </div>
+    <div class="result-block gold">
+      <div class="rb-label">ATTENTION ／ 注意点</div>
+      <div class="rb-body" id="r-note"></div>
+    </div>
+    <div class="result-block">
+      <div class="rb-label">NEXT ACTION ／ 今必要な行動</div>
+      <ul class="point-list" id="r-action"></ul>
+    </div>
+    <div class="result-block">
+      <div class="rb-label">YOUR FUTURE ／ 未来の可能性</div>
+      <div class="rb-body" id="r-future"></div>
+    </div>
+
+    <!-- あなたへのメッセージ -->
+    <div class="message-block">
+      <div class="message-title">✦ あなたへのメッセージ ✦</div>
+      <div class="message-body">今回の診断で見えたのは、<br>「今のあなたの現在地」です。<br><br>でも本当に大切なのは、<br>ここから、どんな未来を選んでいくかです。<br><br>同じタイプでも、<br>今の状況、家族構成、働き方、理想の暮らしなどによって、<br>必要なお金や選択肢は大きく変わります。</div>
+
+      <div class="message-body">診断だけでは見えない部分も多いため、<br>もし「自分の場合はどうなるのか」を整理したい場合は、<br><strong>【未来逆算マネーナビ個別セッション】</strong>にて<br>個別に一緒に未来設計を行うことができます。</div>
+
+      <div class="message-body">このセッションでは、</div>
+      <ul class="check-list">
+        <li>今後いくら必要か</li>
+        <li>何から始めるべきか</li>
+        <li>自分に合う資産形成の形</li>
+      </ul>
+      <div class="message-body">を、あなた専用に整理していきます。</div>
+
+      <div class="urgent-badge">⏰ 診断後24時間以内のお申し込み限定【60分 無料】</div>
+
+      <div class="message-body" style="font-size:13px;">"なんとなく不安"を、<br>"未来の設計図"に変える時間にしていきましょう。</div>
+
+      <button class="cta-btn" id="ctaBtn">今すぐ無料セッションを申し込む ▶</button>
+      <div class="cta-note">※ 診断後24時間以内限定・完全無料・オンライン開催</div>
+    </div>
+
+    <button class="retry-btn" onclick="retry()">もう一度診断する</button>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  { text: '10年後の自分の暮らし、どれが一番近いですか？',
+    choices: ['家族と安心して穏やかに暮らしていたい','今より自由な時間とお金を手に入れていたい','好きな仕事をしながら自分らしく生きていたい','何かに挑戦して、成長し続けていたい'] },
+  { text: 'お金に関して、一番大切にしたいことは？',
+    choices: ['安心・安定（リスクをとらず守りたい）','自由（縛られずに使えるお金が欲しい）','成長（学びや経験に投資したい）','豊かさ（家族や生活を豊かにしたい）'] },
+  { text: '将来の生活レベルについての希望は？',
+    choices: ['最低限で大丈夫','今と同じくらいのレベルがいい','少し豊かに過ごしたい','我慢せず自由に過ごしたい'] },
+  { text: '将来のために必要だと思うのは？',
+    choices: ['節約','貯金','資産形成','複数の収入源'] },
+  { text: '投資や資産運用について、今の状態は？',
+    choices: ['怖くて手が出せていない','興味はあるけど何から始めればいいかわからない','少しだけやっているが、もっと学びたい','すでに取り組んでいて、さらに深めたい'] },
+  { text: '投資に対するイメージは？',
+    choices: ['怖い・リスクが高そうというイメージ','興味はあるけど難しそう','きちんと学べばできると思う','すでに取り組んでいてポジティブ'] },
+  { text: '新しいことを始めるとき、どちらに近いですか？',
+    choices: ['十分に調べてから慎重に動く','不安だけど一歩踏み出してみる','まずやってみて、学びながら進む','直感とスピード重視で動く'] },
+  { text: '今の家計や収支の把握は？',
+    choices: ['だいたい把握できている','なんとなくはわかるが詳しくはわからない','あまり把握できていない','全く把握できていない'] },
+  { text: '副業や新しい収入源について、今はどの段階？',
+    choices: ['まだ考えていない','興味はあるが、何をすればいいか迷っている','調べたり少し動き始めている','すでに取り組んでいる'] },
+  { text: '老後の生活費、準備はどの程度できていますか？',
+    choices: ['しっかり準備している','少しは準備しているが不十分','ほとんどできていない','何から始めればいいかわからない'] },
+  { text: '自分への投資（学び・スキルアップ）について？',
+    choices: ['積極的にしている','したいが時間・お金の余裕がない','何をすべきかわからない','あまり必要性を感じていない'] },
+  { text: '今から5年後、収入はどうなっていたいですか？',
+    choices: ['今と同じくらい安定していればいい','今より少し増えていればいい','今の1.5〜2倍にしたい','仕組みで自動的に収入が入る状態にしたい'] },
+  { text: '今の生活にお金の余裕はどのくらいありますか？',
+    choices: ['毎日いっぱいいっぱい','少し余裕がない','時々ゆとりがある','比較的自由に使える'] },
+  { text: '自分の時間についてどのくらいありますか？',
+    choices: ['ほとんど取れない','たまに取れる','意識して作っている','比較的自由に使える'] },
+  { text: '将来のための毎月の貯金・投資はできていますか？',
+    choices: ['できていない','少額だけしている','計画的にできている','必要な分はすでに準備できている'] }
+];
+
+// [安心設計, 未来準備, 頑張り屋さん, なんとなく不安, 成長志向, 行動加速, 未来クリエイター, 自由設計]
+const SCORES = [
+  [[2,0,1,0,0,0,0,0],[0,0,0,0,0,0,1,2],[0,0,0,0,1,0,2,0],[0,0,0,0,2,1,0,0]],
+  [[2,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,2],[0,0,0,0,2,0,0,0],[1,1,1,0,0,0,0,0]],
+  [[2,0,0,0,0,0,0,0],[1,1,0,0,0,0,0,0],[0,2,0,0,1,0,0,0],[0,0,0,0,0,0,1,2]],
+  [[2,0,0,1,0,0,0,0],[1,1,0,0,0,0,0,0],[0,0,0,0,2,1,0,0],[0,0,0,0,0,0,2,2]],
+  [[1,0,0,2,0,0,0,0],[0,2,0,1,0,0,0,0],[0,1,0,0,2,0,0,0],[0,0,0,0,0,2,1,0]],
+  [[1,0,0,2,0,0,0,0],[0,2,0,1,0,0,0,0],[0,1,0,0,2,0,0,0],[0,0,0,0,0,2,1,0]],
+  [[2,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0],[0,0,0,0,1,2,0,0],[0,0,0,0,0,0,2,1]],
+  [[2,0,0,0,0,1,0,0],[1,1,0,0,0,0,0,0],[0,0,1,2,0,0,0,0],[0,0,0,2,0,0,0,0]],
+  [[1,0,0,1,0,0,0,0],[0,2,0,1,0,0,0,0],[0,1,0,0,2,0,0,0],[0,0,0,0,0,2,1,0]],
+  [[2,0,0,0,0,1,0,0],[1,2,0,0,0,0,0,0],[0,0,0,2,0,0,0,0],[0,1,0,2,0,0,0,0]],
+  [[0,0,0,0,2,1,0,0],[0,0,2,1,0,0,0,0],[0,1,0,2,0,0,0,0],[1,0,0,0,0,0,0,0]],
+  [[2,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0],[0,0,0,0,2,1,0,0],[0,0,0,0,0,0,2,2]],
+  [[0,0,2,1,0,0,0,0],[0,0,1,1,0,0,0,0],[1,1,0,0,0,0,0,0],[0,0,0,0,0,0,1,2]],
+  [[0,0,2,1,0,0,0,0],[0,1,1,0,0,0,0,0],[0,0,0,0,2,1,0,0],[0,0,0,0,0,0,0,2]],
+  [[0,0,1,2,0,0,0,0],[0,2,0,1,0,0,0,0],[2,0,0,0,0,1,0,0],[0,0,0,0,0,2,1,0]]
+];
+
+const TYPES = [
+  {
+    name: '安心設計タイプ',
+    sub: 'しっかり守れる・堅実さが強み',
+    desc: 'あなたは「安心設計タイプ」です。\n\nお金に対してとても慎重で、堅実に向き合えている状態です。家族や生活を守る意識が強く、「失敗したくない」という気持ちも大切にしています。\n\nただその一方で、「このままで本当に大丈夫かな…」と心のどこかで感じる瞬間もあるのではないでしょうか。\n\n"守る力"はすでにあるので、あとは「増やす視点」を少し加えるだけで未来が大きく変わります。',
+    strength: ['強い堅実さと継続力', 'リスクを見極める慎重さ', '家族や生活を守る責任感'],
+    note: 'お金を"守る"ことに集中しすぎると、増やすチャンスを見逃すことがあります。小さな一歩から「活かす視点」を加えてみましょう。',
+    action: ['お金を"守る"から"活かす"へシフトする', '小さくてもいいので仕組み化を始める', '不安の正体を数字で整理する'],
+    future: '堅実な土台の上に「増やす仕組み」が加わると、安心感を保ちながら豊かさも手に入れられます。あなたの慎重さは最大の武器です。'
+  },
+  {
+    name: '未来準備タイプ',
+    sub: 'もう一歩で大きく変われる',
+    desc: 'あなたは「未来準備タイプ」です。\n\n「このままではいけない」と感じながらも、少しずつ未来に向けて動き始めている段階です。\n\nとても良い流れに乗っていますが、まだ「情報収集」と「行動」の間で揺れている状態かもしれません。\n\nあと一歩踏み出すことで、一気に未来が具体化していきます。',
+    strength: ['変わりたいという前向きな意志', '情報収集力と学ぶ姿勢', 'バランスよく物事を考える力'],
+    note: '情報を集めすぎて「考えすぎ」になりやすい傾向があります。小さくても実践することが、今一番大切なステップです。',
+    action: ['知識より"実践"を増やす', '小さく始めて成功体験を作る', '一人で抱えず整理する環境を持つ'],
+    future: '「動き始めた自分」を信じてください。最初の一歩を踏み出した人だけが見える景色があります。あなたはもうその入口に立っています。'
+  },
+  {
+    name: '頑張り屋さんタイプ',
+    sub: '誰かのために動けるエネルギーが強み',
+    desc: 'あなたは「頑張り屋さんタイプ」です。\n\n周りの人のことを大切にして、毎日一生懸命動いている方です。その責任感と行動力はとても大きな強みです。\n\nただその分、自分自身の未来やお金のことは後回しになりがちではないでしょうか。「いつかやろう」「自分のことは後で」という言葉が頭をよぎることも多いかもしれません。\n\n「自分の未来を考える時間」を少し持つだけで、人生の流れが大きく変わり始めます。',
+    strength: ['責任感の強さと行動力', '人を支える献身性と誠実さ', '粘り強く続けられる継続力'],
+    note: '頑張りすぎて自分のことが後回しになりがちです。「自分を大切にすること」が周りを幸せにすることにもつながります。',
+    action: ['週に一度、自分のお金について考える時間を作る', '「自分の未来」も優先事項のひとつにする', '無理なく続けられる資産形成をひとつ始める'],
+    future: 'あなたの頑張りは必ず形になります。自分の未来に少し目を向けるだけで、自分も周りも豊かになる道が開けていきます。'
+  },
+  {
+    name: 'なんとなく不安タイプ',
+    sub: '見える化が突破口になる',
+    desc: 'あなたは「なんとなく不安タイプ」です。\n\nお金や将来に対して不安はあるものの、「何から手をつければいいのか分からない」状態かもしれません。\n\n実はこのタイプはとても多く、不安の正体が"見えていないこと"であるケースがほとんどです。\n\nまず「現状の見える化」をすることで一気に安心感が生まれます。',
+    strength: ['現状を変えたいという意識', '素直に学べる柔軟性', '慎重に考えられる思慮深さ'],
+    note: '「何もしていない」という罪悪感が行動を遠ざけることがあります。小さな一歩が自信につながります。',
+    action: ['収入と支出を一度紙に書き出す', '将来の必要額を可視化する', 'まず一つだけ行動してみる'],
+    future: '不安の正体がわかれば、怖くなくなります。「見える化」した瞬間から、あなたの未来は具体的に動き始めます。'
+  },
+  {
+    name: '成長志向タイプ',
+    sub: '正しい順番で進めば一気に加速',
+    desc: 'あなたは「成長志向タイプ」です。\n\nお金や未来に対して前向きで、学ぶ意欲も高く、とても可能性のある状態です。\n\nただし、情報をたくさん持っている分、「どれを選べばいいのか迷う」という状態にもなりやすい傾向があります。\n\n"正しい順番"で行動することが成功のカギです。',
+    strength: ['高い学習意欲と成長への情熱', '前向きなマインドセット', '情報収集力と分析力'],
+    note: '学びすぎて行動が後回しになりやすいです。「まず一つやってみる」スピードが今の自分を加速させます。',
+    action: ['学びすぎより実践を重視する', '優先順位を3つに絞る', '長期視点で資産設計を始める'],
+    future: '成長への意欲と行動が掛け合わさったとき、あなたの可能性は一気に広がります。知識を武器に、次のステージへ進む準備はできています。'
+  },
+  {
+    name: '行動加速タイプ',
+    sub: '戦略の整理で一気に飛躍',
+    desc: 'あなたは「行動加速タイプ」です。\n\nすでにお金や投資、未来に対して積極的に動けている状態です。\n\nとても良い流れですが、「このまま進んでいいのか」という確認が欲しくなるタイミングでもあります。\n\n"戦略の整理"をすることで一気に加速します。',
+    strength: ['行動力と実践経験', '目標に向かって動ける推進力', '挑戦を恐れないメンタル'],
+    note: 'スピードを重視するあまり、方向性がズレることがあります。定期的に立ち止まって「これは正しい方向か？」を確認する時間を持ちましょう。',
+    action: ['今の方向性を専門家と確認する', 'リスクとバランスを見直す', '仕組み化と継続設計を整える'],
+    future: '行動力という最大の武器に「戦略」が加われば、あなたの未来設計は一気に加速します。今の積み上げは必ず大きな実を結びます。'
+  },
+  {
+    name: '未来クリエイタータイプ',
+    sub: '理想の未来を自らデザインできる',
+    desc: 'あなたは「未来クリエイタータイプ」です。\n\n理想の未来が明確で、それに向かって行動できる非常に良い状態です。\n\nすでに"受け身の状態"ではなく、自分で人生をデザインできるフェーズに入っています。\n\nさらに「資産設計」と「仕組み化」で未来の自由度が高まります。',
+    strength: ['理想の未来が明確なビジョン力', '自分で道を切り拓く行動力', 'クリエイティブな発想と柔軟性'],
+    note: '理想が高い分、現実とのギャップに焦ることがあります。長期的な視点を持ちながら、今できることを着実に積み上げていきましょう。',
+    action: ['収入源の複線化を考える', '長期資産の設計を始める', '時間の自由を増やす仕組みを作る'],
+    future: 'あなたはすでに「人生を設計する人」です。資産と仕組みが整えば、理想の未来はもっとリアルに、もっと早く手に入ります。'
+  },
+  {
+    name: '自由設計タイプ',
+    sub: '自由と豊かさを両立できる',
+    desc: 'あなたは「自由設計タイプ」です。\n\nお金・働き方・時間に対して、「自分で選びたい」という意識がとても強いタイプです。\n\nすでに人生を"設計する視点"を持っており、とても柔軟で可能性の高い状態です。\n\n「自由を維持しながら資産を増やす設計」が重要になります。',
+    strength: ['自由を大切にする強い意志', '柔軟な発想と適応力', '自分の軸を持った判断力'],
+    note: '自由を求めるあまり、長期的な安定設計が後回しになることがあります。「自由×安定」の両立設計を意識しましょう。',
+    action: ['自由と収入の両立設計を考える', '場所・時間に縛られない働き方を構築する', '資産収入の仕組みを作り始める'],
+    future: 'あなたの「自分で選ぶ力」は最大の強みです。その力に資産の仕組みが加われば、本当の意味での自由な人生が実現できます。'
+  }
+];
+
+const TOTAL = 15;
+let current = 0;
+let scores = [0,0,0,0,0,0,0,0];
+let answers = new Array(TOTAL).fill(-1);
+
+// ★ 個別セッションの申し込みURLをここに入れてください
+const SESSION_URL = 'https://lin.ee/zmTOddbJ';
+
+function startQuiz() {
+  document.getElementById('topPage').style.display = 'none';
+  document.getElementById('quizPage').style.display = 'block';
+  showQuestion(0);
+}
+
+function showQuestion(idx) {
+  current = idx;
+  const q = QUESTIONS[idx];
+  const pct = Math.round((idx / TOTAL) * 100);
+  document.getElementById('progressText').textContent = `Q${idx+1} / 15`;
+  document.getElementById('progressPct').textContent = pct + '%';
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('qNum').textContent = 'Q' + String(idx+1).padStart(2,'0');
+  document.getElementById('qText').textContent = q.text;
+
+  const labels = ['A', 'B', 'C', 'D'];
+  const container = document.getElementById('choices');
+  container.innerHTML = '';
+  q.choices.forEach((choice, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn' + (answers[idx] === i ? ' selected' : '');
+    btn.innerHTML = `<span class="choice-label">${labels[i]}.</span>${choice}`;
+    btn.onclick = () => selectAnswer(i);
+    container.appendChild(btn);
+  });
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function selectAnswer(ansIdx) {
+  answers[current] = ansIdx;
+  document.querySelectorAll('.choice-btn').forEach((btn, i) => {
+    btn.classList.toggle('selected', i === ansIdx);
+  });
+  setTimeout(() => {
+    if (current < TOTAL - 1) {
+      showQuestion(current + 1);
+    } else {
+      calcResult();
+    }
+  }, 300);
+}
+
+function calcResult() {
+  scores = [0,0,0,0,0,0,0,0];
+  answers.forEach((ans, qi) => {
+    if (ans >= 0) SCORES[qi][ans].forEach((pt, ti) => { scores[ti] += pt; });
+  });
+  showResult(scores.indexOf(Math.max(...scores)));
+}
+
+function showResult(idx) {
+  const t = TYPES[idx];
+  document.getElementById('r-typeName').textContent = t.name;
+  document.getElementById('r-typeSub').textContent = t.sub;
+  document.getElementById('r-desc').textContent = t.desc;
+  document.getElementById('r-note').textContent = t.note;
+  document.getElementById('r-future').textContent = t.future;
+  document.getElementById('r-strength').innerHTML = t.strength.map(s => `<li>${s}</li>`).join('');
+  document.getElementById('r-action').innerHTML = t.action.map(a => `<li>${a}</li>`).join('');
+  document.getElementById('ctaBtn').onclick = () => { if(SESSION_URL !== '#') window.location.href = SESSION_URL; };
+  document.getElementById('quizPage').style.display = 'none';
+  document.getElementById('resultPage').style.display = 'block';
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function retry() {
+  current = 0;
+  scores = [0,0,0,0,0,0,0,0];
+  answers = new Array(TOTAL).fill(-1);
+  document.getElementById('resultPage').style.display = 'none';
+  document.getElementById('topPage').style.display = 'flex';
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+</script>
+</body>
+</html>
